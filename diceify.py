@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def resize_pic(fname):
-    n_dices = 200
+    n_dices = 100
     img = cv2.imread(fname)
     img_small = cv2.resize(img, (n_dices,n_dices))
     grayImage = cv2.cvtColor(img_small, cv2.COLOR_BGR2GRAY)
@@ -22,6 +22,9 @@ def colour_downsample(img):
     down_sampled_img = [np.concatenate([dice_dic[x] for x in y], axis=1) for y in digits]
     down_sampled_img = np.reshape(down_sampled_img,(x_shape_new, y_shape_new))
 
+    # make the image as strings of numbers 
+    for i, row in enumerate(digits):
+        print('{0:3d}'.format(i), '\t',''.join(list([str(x) for x in row])))
 
     plt.imshow(down_sampled_img, cmap='binary')
     plt.show()
