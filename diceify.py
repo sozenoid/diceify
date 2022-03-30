@@ -9,7 +9,7 @@ def resize_pic(fname):
     AS = float(w)/float(h)
     x = (n_dices/h**2/AS)**.5
 
-    print(f'Image was be  {w} by {h} dices')
+    print(f'Image was be  {w} by {h} pixels')
     print(f'Image will be {int(AS*x*h)} by {int(x*h)} dices ({int(AS*x*h)* int(x*h)} dices)')
     img_small = cv2.resize(img, (int(x*h),int(x*h*AS)))
 
