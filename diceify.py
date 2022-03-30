@@ -4,6 +4,7 @@ import numpy as np
 
 def resize_pic(fname):
     n_dices = 10000
+    dice_side = 0.8 # cm
     img = cv2.imread(fname)
     w, h, c = img.shape
     AS = float(w)/float(h)
@@ -11,6 +12,8 @@ def resize_pic(fname):
 
     print(f'Image was be  {w} by {h} pixels')
     print(f'Image will be {int(AS*x*h)} by {int(x*h)} dices ({int(AS*x*h)* int(x*h)} dices)')
+    print(f'Image will be {int(AS*x*h)*dice_side:2.2f} by {int(x*h)*dice_side:2.2f} cm x cm')
+
     img_small = cv2.resize(img, (int(x*h),int(x*h*AS)))
 
 
