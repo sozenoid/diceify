@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def resize_pic(fname):
-    n_dices = 10000
-    dice_side = 0.8 # cm
+    n_dices = 9500
+    dice_side = 0.775 # cm
     img = cv2.imread(fname)
     w, h, c = img.shape
     AS = float(w)/float(h)
     x = (n_dices/h**2/AS)**.5
 
-    print(f'Image was be  {w} by {h} pixels')
+    print(f'Image was  {w} by {h} pixels')
     print(f'Image will be {int(AS*x*h)} by {int(x*h)} dices ({int(AS*x*h)* int(x*h)} dices)')
     print(f'Image will be {int(AS*x*h)*dice_side:2.2f} by {int(x*h)*dice_side:2.2f} cm x cm')
 
@@ -20,16 +20,18 @@ def resize_pic(fname):
     grayImage = cv2.cvtColor(img_small, cv2.COLOR_BGR2GRAY)
     return grayImage
 
+
 def colour_downsample(img):
     dice_dic = get_dice_pixelated()
-    bins =  np.linspace(-1, 255, 7)[::-1]
-    digits = np.digitize(img, bins, right=True)
+    bins_positive = np.linspace(-1, 255, 7)[::-1]
+    bins_negative = np.linspace(-1, 255, 7)#[::-1]
+
+    digits = np.digitize(img, bins_positive, right=True)
 
     dice_size = dice_dic[1].shape
 
-    x_shape_new, y_shape_new = digits.shape[0]*dice_size[0], digits.shape[1]*dice_size[1]
-
-
+    x_shape_new, y_shape_new = digits.shape[0]*dice_size[0],\
+                               digits.shape[1]*dice_size[1]
     down_sampled_img = [np.concatenate([dice_dic[x] for x in y], axis=1) for y in digits]
     down_sampled_img = np.reshape(down_sampled_img,(x_shape_new, y_shape_new))
 
@@ -44,7 +46,7 @@ def colour_downsample(img):
 def get_dice_pixelated(dice_size=5):
     if dice_size==3:
         one =  np.array([[0, 0, 0],
-                         [0, 1 ,0],
+                         [0, 1, 0],
                          [0, 0, 0]])*255
         two =  np.array([[0, 0, 1],
                          [0, 0, 0],
@@ -98,6 +100,6 @@ def get_dice_pixelated(dice_size=5):
     return {1:one,2:two,3:three,4:four,5:five,6:six}
 
 if __name__ == "__main__":
-    small_img = resize_pic('./mamanetjean_cropped.png')
+    small_img = resize_pic('./mamanetjean_cropped_1_5.jpg')
     down_sampled_img = colour_downsample(small_img)
     cv2.imwrite('./diced_mamanetjean_cropped.png', 255-down_sampled_img)
